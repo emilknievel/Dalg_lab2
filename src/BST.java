@@ -73,6 +73,7 @@ public class BST {
 
         root = insert(root, key, val);
         size++;
+        System.out.println(size);
     }
 
     /**
@@ -97,61 +98,116 @@ public class BST {
     /**
      * Remove node with given key from BST
      */
-    public void remove(int key) {
-        if (!isEmpty()) {
-            if (root.key == key) {
-                if (root.left != null) {
-                    Node temp = max(root.left);
-                    remove(temp.key, root.left, root);
-                    root.key = temp.key;
-                    root.val = temp.val;
-                } else if (root.right != null) {
-                    Node temp = min(root.right);
-                    remove(temp.key, root.right, root);
-                    root.key = temp.key;
-                    root.val = temp.val;
-                } else {
-                    root = null;
-                    size--;
-                }
-            } else {
-                remove(key, root, null);
-            }
+    /*public void remove(int key) {
+        if (contains(key)) {
+            root = remove(root, key);
+            size--;
         }
     }
 
-    /**
-     * Tries to remove node.
-     * Returns true if a node is removed, otherwise false.
-     */
-    private boolean remove(int key, Node child, Node parent) {
-        if (key < child.key)
-            return child.left != null && remove(key, child.left, child);
-        else if (key > child.key)
-            return child.right != null && remove(key, child.right, child);
-        else {
-            if (child.left != null && child.right != null) {
-                child.key = max(child.left).key;
-                child.val = max(child.left).val;
-                remove(child.key, child.left, child);
-            } else if (parent.left == child) {
-                if (child.left != null) {
-                    parent.left = child.left;
-                } else {
-                    parent.left = child.right;
-                }
-                size--;
+    private Node remove(Node x, int key) {
+        if (!isEmpty()) {
+            if (key < x.key) x.left = remove(x.left, key);
+            else if (key > x.key) x.right = remove(x.right, key);
+            else {
+                if (x.left == null && x.right == null) {
 
-            } else if (parent.right == child) {
-                if (child.left != null) {
-                    parent.right = child.left;
-                } else {
-                    parent.right = child.right;
                 }
-                size--;
+
+
+
+
+
+
+
+
+                if(x.left == null) {
+                    if (x.right != null) {
+                        // Replace with leftmost node in the right subtree
+                        Node temp = min(x.right);
+
+                        //Remove leftmost node in the right subtree
+                        //remove(x.right, temp.key);
+
+
+
+                        x.key = temp.key;
+                        x.val = temp.val;
+                    }
+                } else {
+                    //Replace with rightmost node in the left subtree
+                    Node temp = max(x.left);
+
+                    //Remove rightmost node in the left subtree
+                    //remove(x.left, temp.key);
+                    
+                    x.key = temp.key;
+                    x.val = temp.val;
+                }
             }
-            return true;
         }
+        return x;
+    }*/
+
+
+    public void remove(int key) {
+        if (contains(key)) {
+            root = remove(root, key);
+            size--;
+            System.out.println(size);
+        }
+    }
+
+    private Node remove(Node x, int key) {
+        if (x == null) return null;
+        if (key < x.key) x.left = remove(x.left, key);
+        else if (key > x.key) x.right = remove(x.right, key);
+        else {
+            if (x.right == null) return x.left;
+            if (x.left == null) return x.right;
+            Node temp = x;
+            x = max(temp.left);
+            x.right = temp.right;
+            x.left = removeMax(temp.left);
+        }
+        //x.size = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+
+    public void removeMin() {
+        root = removeMin(root);
+    }
+
+    private Node removeMin(Node x) {
+        if (x.left == null) return x.right;
+        x.left = removeMin(x.left);
+        //x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+
+    public void removeMax() {
+        root = removeMax(root);
+    }
+
+    private Node removeMax(Node x) {
+        if (x.right == null) return x.left;
+        x.right = removeMax(x.right);
+        //x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+
+    private Node min(Node x) {
+        while (x.left != null) {
+            x = x.left;
+        }
+        return x;
+    }
+
+    private Node max(Node x) {
+        while (x.right != null) {
+            x = x.right;
+        }
+        return x;
     }
 
 
@@ -161,20 +217,5 @@ public class BST {
 
     public LevelorderIterator levelorder() {
         return new LevelorderIterator(root);
-    }
-
-
-    // ===================================================================
-    // Helper functions
-    // ===================================================================
-
-    private Node min(Node n) {
-        if (n.left == null) return n;
-        return min(n.left);
-    }
-
-    private Node max(Node n) {
-        if (n.right == null) return n;
-        return max(n.right);
     }
 }
