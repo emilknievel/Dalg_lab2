@@ -121,30 +121,11 @@ public class BST {
     }
 
     /**
-     * Remove the smallest sub-node of the tree starting at x
-     */
-    private Node removeMin(Node x) {
-        if (x.left == null) return x.right;
-        x.left = removeMin(x.left);
-        return x;
-    }
-
-    /**
      * Remove the largest sub-node of the tree starting at x
      */
     private Node removeMax(Node x) {
         if (x.right == null) return x.left;
         x.right = removeMax(x.right);
-        return x;
-    }
-
-    /**
-     * Return the leftmost node
-     */
-    private Node min(Node x) {
-        while (x.left != null) {
-            x = x.left;
-        }
         return x;
     }
 
@@ -157,7 +138,6 @@ public class BST {
         }
         return x;
     }
-
 
     public PreorderIterator preorder() {
         return new PreorderIterator(root);
