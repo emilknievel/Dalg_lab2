@@ -73,7 +73,6 @@ public class BST {
 
         root = insert(root, key, val);
         size++;
-        System.out.println(size);
     }
 
     /**
@@ -98,66 +97,14 @@ public class BST {
     /**
      * Remove node with given key from BST
      */
-    /*public void remove(int key) {
-        if (contains(key)) {
-            root = remove(root, key);
-            size--;
-        }
-    }
-
-    private Node remove(Node x, int key) {
-        if (!isEmpty()) {
-            if (key < x.key) x.left = remove(x.left, key);
-            else if (key > x.key) x.right = remove(x.right, key);
-            else {
-                if (x.left == null && x.right == null) {
-
-                }
-
-
-
-
-
-
-
-
-                if(x.left == null) {
-                    if (x.right != null) {
-                        // Replace with leftmost node in the right subtree
-                        Node temp = min(x.right);
-
-                        //Remove leftmost node in the right subtree
-                        //remove(x.right, temp.key);
-
-
-
-                        x.key = temp.key;
-                        x.val = temp.val;
-                    }
-                } else {
-                    //Replace with rightmost node in the left subtree
-                    Node temp = max(x.left);
-
-                    //Remove rightmost node in the left subtree
-                    //remove(x.left, temp.key);
-                    
-                    x.key = temp.key;
-                    x.val = temp.val;
-                }
-            }
-        }
-        return x;
-    }*/
-
-
     public void remove(int key) {
-        if (contains(key)) {
-            root = remove(root, key);
-            size--;
-            System.out.println(size);
-        }
+        root = remove(root, key);
+        size--;
     }
 
+    /**
+     * Remove the node and link the other nodes accordingly
+     */
     private Node remove(Node x, int key) {
         if (x == null) return null;
         if (key < x.key) x.left = remove(x.left, key);
@@ -167,35 +114,33 @@ public class BST {
             if (x.left == null) return x.right;
             Node temp = x;
             x = max(temp.left);
-            x.right = temp.right;
             x.left = removeMax(temp.left);
+            x.right = temp.right;
         }
-        //x.size = size(x.left) + size(x.right) + 1;
         return x;
     }
 
-    public void removeMin() {
-        root = removeMin(root);
-    }
-
+    /**
+     * Remove the smallest sub-node of the tree starting at x
+     */
     private Node removeMin(Node x) {
         if (x.left == null) return x.right;
         x.left = removeMin(x.left);
-        //x.N = size(x.left) + size(x.right) + 1;
         return x;
     }
 
-    public void removeMax() {
-        root = removeMax(root);
-    }
-
+    /**
+     * Remove the largest sub-node of the tree starting at x
+     */
     private Node removeMax(Node x) {
         if (x.right == null) return x.left;
         x.right = removeMax(x.right);
-        //x.N = size(x.left) + size(x.right) + 1;
         return x;
     }
 
+    /**
+     * Return the leftmost node
+     */
     private Node min(Node x) {
         while (x.left != null) {
             x = x.left;
@@ -203,6 +148,9 @@ public class BST {
         return x;
     }
 
+    /**
+     * Return the rightmost node
+     */
     private Node max(Node x) {
         while (x.right != null) {
             x = x.right;
